@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Ookii.Dialogs.Wpf;
+using System.IO;
 
 namespace SmartBox
 {
@@ -24,6 +25,7 @@ namespace SmartBox
         public MainWindow()
         {
             InitializeComponent();
+            
         }
 
         private void gamepathSearchBtn_Click(object sender, RoutedEventArgs e)
@@ -31,7 +33,17 @@ namespace SmartBox
             VistaFolderBrowserDialog folderDlg = new VistaFolderBrowserDialog();
             folderDlg.SelectedPath = Properties.Settings.Default.GameCollectionPath;
             folderDlg.ShowNewFolderButton = true;
-            folderDlg.ShowDialog();          
+            if (folderDlg.ShowDialog() == true)
+            {
+                SmartBox.Properties.Settings.Default.GameCollectionPath = folderDlg.SelectedPath;
+            }
+
+        }
+
+        private void gameListLoadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var loadPath = SmartBox.Properties.Settings.Default.GameCollectionPath;
+            
         }
     }
 }
