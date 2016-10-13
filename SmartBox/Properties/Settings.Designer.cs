@@ -34,5 +34,29 @@ namespace SmartBox.Properties {
                 this["GameCollectionPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GameInstallPath {
+            get {
+                return ((string)(this["GameInstallPath"]));
+            }
+            set {
+                this["GameInstallPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GameRunPath {
+            get {
+                return ((string)(this["GameRunPath"]));
+            }
+            set {
+                this["GameRunPath"] = value;
+            }
+        }
     }
 }

@@ -37,13 +37,35 @@ namespace SmartBox
             {
                 SmartBox.Properties.Settings.Default.GameCollectionPath = folderDlg.SelectedPath;
             }
+        }
 
+        private void gameInstallPathButton_Click(object sender, RoutedEventArgs e)
+        {
+            VistaFolderBrowserDialog folderDlg = new VistaFolderBrowserDialog();
+            folderDlg.SelectedPath = Properties.Settings.Default.GameInstallPath;
+            folderDlg.ShowNewFolderButton = true;
+            if (folderDlg.ShowDialog() == true)
+            {
+                SmartBox.Properties.Settings.Default.GameInstallPath = folderDlg.SelectedPath;
+            }
+        }
+
+        private void gameRunPathButton_Click(object sender, RoutedEventArgs e)
+        {
+            VistaFolderBrowserDialog folderDlg = new VistaFolderBrowserDialog();
+            folderDlg.SelectedPath = Properties.Settings.Default.GameRunPath;
+            folderDlg.ShowNewFolderButton = true;
+            if (folderDlg.ShowDialog() == true)
+            {
+                SmartBox.Properties.Settings.Default.GameRunPath = folderDlg.SelectedPath;
+            }
         }
 
         private void gameListLoadBtn_Click(object sender, RoutedEventArgs e)
         {
             var loadPath = SmartBox.Properties.Settings.Default.GameCollectionPath;
-            
+            var files = Directory.GetFiles(loadPath);
         }
+        
     }
 }

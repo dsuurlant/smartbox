@@ -16,15 +16,25 @@
             <TabItem Header="Games">
                 <Grid Background="#FFE5E5E5">
                     <Label x:Name="label" Content="Games List" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" Width="70"/>
-                    <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="146" Margin="10,27,0,0" VerticalAlignment="Top" Width="488"/>
+                    <DataGrid x:Name="gameListGrid" HorizontalAlignment="Left" Height="146" Margin="10,27,0,0" VerticalAlignment="Top" Width="488">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                     <Button x:Name="gameListLoadBtn" Content="Load" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top" Width="75" Click="gameListLoadBtn_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Configuration">
                 <Grid Background="#FFE5E5E5">
-                    <Label x:Name="label1" Content="Game collection root path" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" Width="151"/>
+                    <Label x:Name="gamepathLabel" Content="Where do I find your game collection?" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" Width="433"/>
                     <TextBox x:Name="gamepathTextBox" HorizontalAlignment="Left" Height="23" Margin="10,26,0,0" TextWrapping="Wrap" Text="{Binding Source={x:Static properties:Settings.Default}, Path=GameCollectionPath}" VerticalAlignment="Top" Width="433"/>
-                    <Button x:Name="gamepathSearchBtn" Content="Search" HorizontalAlignment="Left" Margin="448,26,0,0" VerticalAlignment="Top" Width="50" Click="gamepathSearchBtn_Click"/>
+                    <Button x:Name="gamepathSearchBtn" Content="Select" HorizontalAlignment="Left" Margin="448,26,0,0" VerticalAlignment="Top" Width="50" Click="gamepathSearchBtn_Click"/>
+                    <Label x:Name="gameInstallPathLabel" Content="Where do I copy installation files to?" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" Width="433"/>
+                    <TextBox x:Name="gameInstallPathTextbox" HorizontalAlignment="Left" Height="23" Margin="10,80,0,0" TextWrapping="Wrap" Text="{Binding Source={x:Static properties:Settings.Default}, Path=GameInstallPath}" VerticalAlignment="Top" Width="433"/>
+                    <Button x:Name="gameInstallPathButton" Content="Select" HorizontalAlignment="Left" Margin="448,80,0,0" VerticalAlignment="Top" Width="50" Click="gameInstallPathButton_Click"/>
+                    <Label x:Name="gameRunPathLabel" Content="Where do I install your games?" HorizontalAlignment="Left" Margin="10,108,0,0" VerticalAlignment="Top" Width="433"/>
+                    <TextBox x:Name="gameRunPathTextBox" HorizontalAlignment="Left" Height="23" Margin="10,134,0,0" TextWrapping="Wrap" Text="{Binding Source={x:Static properties:Settings.Default}, Path=GameRunPath}" VerticalAlignment="Top" Width="433"/>
+                    <Button x:Name="gameRunPathButton" Content="Select" HorizontalAlignment="Left" Margin="448,135,0,0" VerticalAlignment="Top" Width="50" Click="gameRunPathButton_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
