@@ -15,6 +15,10 @@ using System.Windows.Shapes;
 using Ookii.Dialogs.Wpf;
 using System.IO;
 using SQLite;
+using SmartBox.Properties;
+using System.Diagnostics;
+using SmartBox.Entity;
+using System.Data;
 
 namespace SmartBox
 {
@@ -24,24 +28,40 @@ namespace SmartBox
     public partial class MainWindow : Window
     {
         private SQLiteConnection db;
-        private static string dbName = "gamecollection.db";
+        private static string dbName = "gamecollection.db"; //!IMPORTANT must match conn string in App.config
 
         public MainWindow()
         {
             InitializeComponent();
-            if (File.Exists(dbName) == false)
-            {                
-                // create db, init tables
-                System.Data.SQLite.SQLiteConnection.CreateFile(dbName);
-                db = new SQLiteConnection(dbName);
-                db.CreateTable<Entity.Game>();
-                db.CreateTable<Entity.Template>();
-                // @TODO issue #3 auto add DOSBox config templates.
-            } else
+            if (initializeDatabase() == false)
             {
-                db = new SQLiteConnection(dbName);
+                MessageBox.Show("An error has occurred whilst initializing the application database.", "Database initialization error", MessageBoxButton.OK);
             }
-            
+        }
+
+        private bool initializeDatabase()
+        {
+            try
+            {
+                if (File.Exists(dbName) == false)
+                {
+                    System.Data.SQLite.SQLiteConnection.CreateFile(dbName);
+                }
+                db = new SQLiteConnection(dbName);
+
+                var mappings = db.TableMappings;
+                if (mappings.Count() == 0)
+                {
+                    db.CreateTable<Game>();
+                    db.CreateTable<Template>();
+                }
+
+                return true;
+            } catch (SQLiteException e)
+            {
+                // @TODO exception handling
+                return false;
+            }
         }
 
         private void gamepathSearchBtn_Click(object sender, RoutedEventArgs e)
@@ -51,7 +71,7 @@ namespace SmartBox
             folderDlg.ShowNewFolderButton = true;
             if (folderDlg.ShowDialog() == true)
             {
-                SmartBox.Properties.Settings.Default.GameCollectionPath = folderDlg.SelectedPath;
+                Settings.Default.GameCollectionPath = folderDlg.SelectedPath;
             }
         }
 
@@ -62,7 +82,7 @@ namespace SmartBox
             folderDlg.ShowNewFolderButton = true;
             if (folderDlg.ShowDialog() == true)
             {
-                SmartBox.Properties.Settings.Default.GameInstallPath = folderDlg.SelectedPath;
+                Settings.Default.GameInstallPath = folderDlg.SelectedPath;
             }
         }
 
@@ -73,21 +93,37 @@ namespace SmartBox
             folderDlg.ShowNewFolderButton = true;
             if (folderDlg.ShowDialog() == true)
             {
-                SmartBox.Properties.Settings.Default.GameRunPath = folderDlg.SelectedPath;
+                Settings.Default.GameRunPath = folderDlg.SelectedPath;
             }
         }
 
-        private void gameListLoadBtn_Click(object sender, RoutedEventArgs e)
+        private void gameListQuickLoadBtn_Click(object sender, RoutedEventArgs e)
         {
-            var loadPath = SmartBox.Properties.Settings.Default.GameCollectionPath;
-            var files = Directory.GetFiles(loadPath);
-
-            foreach (string filename in files)
+            var loadPath = Settings.Default.GameCollectionPath;
+            if (loadPath == "")
             {
-                Entity.Game game = new Entity.Game();
+                // display error, return.
+                MessageBox.Show("Configure the game collection load path first!", "Unable to Quick Load", MessageBoxButton.OK);
+                return;
+            }
+            else
+            {
+                var files = Directory.GetFiles(loadPath);
+                // @TODO overwrite or append etc.
 
+                foreach (string filename in files)
+                {
+                    Game game = new Game();
+                    game.fileName = filename;
+                    db.Insert(game);
+                }
+
+                var games = db.Query<Game>("SELECT * FROM Game");
+                quickLoadMsg.Content = games.Count() + " loaded.";
+
+                //SQLiteCommand cmd = new SQLiteCommand();
+                //gameCollectionGrid.ItemsSource = dt.DefaultView;
             }
         }
-        
     }
 }
