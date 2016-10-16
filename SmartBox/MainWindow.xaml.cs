@@ -37,6 +37,10 @@ namespace SmartBox
             {
                 MessageBox.Show("An error has occurred whilst initializing the application database.", "Database initialization error", MessageBoxButton.OK);
             }
+            if (initializeDataGrid() == false)
+            {
+                MessageBox.Show("An error has occurred whilst initializing the game collection list.", "Grid initialization error", MessageBoxButton.OK);
+            }
         }
 
         private bool initializeDatabase()
@@ -58,6 +62,20 @@ namespace SmartBox
 
                 return true;
             } catch (SQLiteException e)
+            {
+                // @TODO exception handling
+                return false;
+            }
+        }
+
+        private bool initializeDataGrid()
+        {
+            try
+            {
+                var games = db.Table<Game>();
+                gameCollectionGrid.DataContext = games;
+                return true;
+            } catch (Exception e)
             {
                 // @TODO exception handling
                 return false;
@@ -120,9 +138,6 @@ namespace SmartBox
 
                 var games = db.Query<Game>("SELECT * FROM Game");
                 quickLoadMsg.Content = games.Count() + " loaded.";
-
-                //SQLiteCommand cmd = new SQLiteCommand();
-                //gameCollectionGrid.ItemsSource = dt.DefaultView;
             }
         }
     }
