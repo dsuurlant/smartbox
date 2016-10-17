@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SmartBox"
         xmlns:properties="clr-namespace:SmartBox.Properties"
         mc:Ignorable="d"
-        Title="SMARTBox" MinWidth="600" SizeToContent="WidthAndHeight">
+        Title="SMARTBox" MinWidth="800" MinHeight="600" SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="347*"/>
@@ -14,12 +14,13 @@
         </Grid.ColumnDefinitions>
         <TabControl x:Name="tabControl" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Height="Auto" Margin="-1,-1,0,0" VerticalAlignment="Top" Width="Auto" Grid.ColumnSpan="2">
             <TabItem Header="Games">
-                <Grid Background="#FFE5E5E5">
+                <Grid Background="#FFE5E5E5" Height="719">
                     <Label x:Name="label" Content="Games Collection" HorizontalAlignment="Left" VerticalAlignment="Top" Width="137"/>
-                    <DataGrid x:Name="gameCollectionGrid" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" Height="520" Margin="10,70,0,-11" VerticalAlignment="Stretch" Width="Auto" ItemsSource="{Binding}" CanUserAddRows="False" CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="WhiteSmoke">
+                    <DataGrid x:Name="gameCollectionGrid" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" Height="520" Margin="10,70,0,129" VerticalAlignment="Stretch" Width="Auto" ItemsSource="{Binding}" CanUserAddRows="False" CanUserResizeColumns="True" CanUserSortColumns="True" AlternatingRowBackground="WhiteSmoke">
                     </DataGrid>
                     <Button x:Name="gameListQuickLoadBtn" Content="Quick Load" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Width="80" Click="gameListQuickLoadBtn_Click" RenderTransformOrigin="-1.903,1.674" Height="34"/>
-                    <Label x:Name="quickLoadMsg" Content="" HorizontalAlignment="Left" Margin="95,31,0,0" VerticalAlignment="Top" Width="488" Height="34"/>
+                    <Label x:Name="quickLoadMsg" Content="" HorizontalAlignment="Left" Margin="10,595,0,0" VerticalAlignment="Top" Width="488" Height="34"/>
+                    <Button x:Name="analyzeBtn" Content="Analyze" HorizontalAlignment="Left" Margin="95,31,0,0" VerticalAlignment="Top" Width="80" Height="34" Click="analyzeBtn_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Configuration">

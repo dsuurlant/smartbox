@@ -18,6 +18,8 @@ namespace SmartBox.Entity
         public int year { get; set; }
         [MaxLength(50)]
         public string publisher { get; set; }
+        public string revision { get; set; }
+        public string extension { get; set; }
         public bool installed { get; set; }
         public string installExecutable { get; set; }
         public string installDir { get; set; }        

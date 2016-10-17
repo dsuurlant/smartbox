@@ -19,6 +19,7 @@ using SmartBox.Properties;
 using System.Diagnostics;
 using SmartBox.Entity;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace SmartBox
 {
@@ -171,6 +172,52 @@ namespace SmartBox
             {
                 // @TODO Exception handling
                 return false;
+            }
+        }
+
+
+        private bool analyzeGames()
+        {
+            try
+            {
+                var games = db.Table<Game>();
+                if (games.Count() == 0)
+                {
+                    MessageBox.Show("You have no games to analyze!", "Unable to Analyze", MessageBoxButton.OK);
+                    return true;
+                }
+                
+                string pattern = @"(?<gameName>[0-9a-zA-Z\s\!\?:.,&\-\+]+)\((?<year>[0-9]{4})\)\((?<publisher>[0-9a-zA-Z\s\!\?:.,&\-\+]+)\)(\((?<revision>[0-9a-zA-Z\s]+)\))?\.(?<extension>[0-9a-zA-Z\s]+)";
+                Regex analyzer = new Regex(pattern);
+
+                foreach (Game game in games)
+                {
+                    var match = analyzer.Match(game.fileName);
+                    game.name = match.Groups["gameName"].Value;
+                    game.publisher = match.Groups["publisher"].Value;
+                    string year = match.Groups["year"].Value;
+                    if (year != "") { game.year = int.Parse(year); }
+                    game.revision = match.Groups["revision"].Value;
+                    game.extension = match.Groups["extension"].Value;
+                    db.Update(game);
+                }
+
+                initializeDataGrid(); // @TODO auto-update datagrid on table changes issue#11
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                // @TODO Exception handling
+                return false;
+            }
+        }
+
+        private void analyzeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (analyzeGames() == false)
+            {
+                MessageBox.Show("An error occurred analyzing your game collection list.", "Unable to Analyze", MessageBoxButton.OK);
             }
         }
     }
