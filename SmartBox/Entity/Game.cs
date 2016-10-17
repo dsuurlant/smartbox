@@ -23,5 +23,10 @@ namespace SmartBox.Entity
         public string installDir { get; set; }        
         public string gameExecutable { get; set; }
         public int templateId { get; set; }
+
+        public override string ToString()
+        {
+            return fileName;
+        }
     }
 }

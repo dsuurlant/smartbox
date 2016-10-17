@@ -120,24 +120,57 @@ namespace SmartBox
             var loadPath = Settings.Default.GameCollectionPath;
             if (loadPath == "")
             {
-                // display error, return.
                 MessageBox.Show("Configure the game collection load path first!", "Unable to Quick Load", MessageBoxButton.OK);
                 return;
             }
-            else
+            else if (quickAppendGames(loadPath) == false)
             {
-                var files = Directory.GetFiles(loadPath);
-                // @TODO overwrite or append etc.
+                MessageBox.Show("An error occurred whilst quickloading.", "Unable to Quick Load", MessageBoxButton.OK);
+            }            
+        }
+
+        private bool quickAppendGames(string gameFolder)
+        {
+            try
+            {
+                var files = Directory.GetFiles(gameFolder);
+                var games = db.Table<Game>();
+                List<string> gameList = new List<string>();
+                List<Game> gamesToLoad = new List<Game>();
+
+                if (games.Count() > 0)
+                {
+                    foreach (Game game in games)
+                    {
+                        gameList.Add(game.ToString());
+                    }
+                }
 
                 foreach (string filename in files)
                 {
-                    Game game = new Game();
-                    game.fileName = filename;
-                    db.Insert(game);
+                    if (gameList.Contains(filename) == false)
+                    {
+                        Game game = new Game();
+                        game.fileName = filename;
+                        gamesToLoad.Add(game);
+                    }
                 }
 
-                var games = db.Query<Game>("SELECT * FROM Game");
-                quickLoadMsg.Content = games.Count() + " loaded.";
+                if (gamesToLoad.Count() > 0)
+                {
+                    db.InsertAll(gamesToLoad);
+                }
+
+                var newTotal = db.ExecuteScalar<int>("SELECT count(id) FROM Game");
+                quickLoadMsg.Content = gamesToLoad.Count() + " imported. " + newTotal + " games total.";
+                initializeDataGrid(); // @TODO datagrid should auto-update with table Game changes. issue#11
+
+                return true;
+
+            } catch (Exception e)
+            {
+                // @TODO Exception handling
+                return false;
             }
         }
     }
