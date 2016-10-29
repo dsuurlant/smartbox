@@ -181,6 +181,7 @@ namespace SmartBox
             try
             {
                 var games = db.Table<Game>();
+                var total = games.Count();
                 if (games.Count() == 0)
                 {
                     MessageBox.Show("You have no games to analyze!", "Unable to Analyze", MessageBoxButton.OK);
@@ -190,18 +191,26 @@ namespace SmartBox
                 string pattern = @"(?<gameName>[0-9a-zA-Z\s\!\?:.,&\-\+]+)\((?<year>[0-9]{4})\)\((?<publisher>[0-9a-zA-Z\s\!\?:.,&\-\+]+)\)(\((?<revision>[0-9a-zA-Z\s]+)\))?\.(?<extension>[0-9a-zA-Z\s]+)";
                 Regex analyzer = new Regex(pattern);
 
+                int failedCount = 0;
                 foreach (Game game in games)
                 {
                     var match = analyzer.Match(game.fileName);
-                    game.name = match.Groups["gameName"].Value;
-                    game.publisher = match.Groups["publisher"].Value;
-                    string year = match.Groups["year"].Value;
-                    if (year != "") { game.year = int.Parse(year); }
-                    game.revision = match.Groups["revision"].Value;
-                    game.extension = match.Groups["extension"].Value;
-                    db.Update(game);
+                    if (match.Success)
+                    {
+                        game.name = match.Groups["gameName"].Value;
+                        game.publisher = match.Groups["publisher"].Value;
+                        string year = match.Groups["year"].Value;
+                        if (year != "") { game.year = int.Parse(year); }
+                        game.revision = match.Groups["revision"].Value;
+                        game.extension = match.Groups["extension"].Value;
+                        db.Update(game);
+                    } else
+                    {
+                        failedCount++;
+                    }
                 }
 
+                quickLoadMsg.Content = total + " games analyzed, " + failedCount + " games failed to parse.";
                 initializeDataGrid(); // @TODO auto-update datagrid on table changes issue#11
 
                 return true;
